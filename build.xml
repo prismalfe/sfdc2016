@@ -1,0 +1,26 @@
+<project name="Sample usage of Salesforce Ant tasks" default="test" basedir="." xmlns:sf="antlib:com.salesforce">
+    <property file="build.properties"/>
+    <property environment="env"/>
+    <property name="deployHome" location="."/>
+    <property name="chkFlag" value="false"/>
+    <target name="deployAll">
+      <sf:deploy checkOnly="${chkFlag}"  username="${sf.username}" password="${sf.password}" serverurl="${sf.serverurl}" deployRoot="${deployHome}/root" runAllTests="False" maxPoll="480" pollWaitMillis="30000">
+      </sf:deploy>
+    </target>
+    <target name="retrieve">
+      <mkdir dir="root"/>
+      <sf:retrieve username="${sf2.username}" password="${sf2.password}" serverurl="${sf2.serverurl}" retrieveTarget="root" unpackaged="package.xml"/>
+    </target>
+    <target name="backup">
+      <mkdir dir="packBackUp"/>
+      <sf:retrieve username="${sf.username}" password="${sf.password}" serverurl="${sf.serverurl}" retrieveTarget="packBackUp" unpackaged="backup.xml"/>
+    </target>
+    <target name="runtest">
+      <sf:deploy username="${sf.username}" password="${sf.password}" serverurl="${sf.serverurl}">
+        <runTest>SampleDeployClass</runTest>
+      </sf:deploy>
+    </target>
+    <target name="undeployCode">
+      <sf:deploy checkOnly="${chkFlag}"  username="${sf.username}" password="${sf.password}" serverurl="${sf.serverurl}" deployRoot="removecodepkg" runAllTests="false" maxPoll="480" pollWaitMillis="120000" />
+    </target>
+</project>
